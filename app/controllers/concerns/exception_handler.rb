@@ -8,17 +8,20 @@ module ExceptionHandler
   class ExpiredSignature < StandardError; end
   class DecodeError < StandardError; end
   class BadRequest < StandardError; end
+  class AuthorizationError < StandardError; end
 
   included do
     # Define custom handlers
-    rescue_from ActiveRecord::RecordInvalid,           with: :render_unprocessable_entity
-    rescue_from ActiveRecord::RecordNotFound,          with: :render_not_found
-    rescue_from ExceptionHandler::AuthenticationError, with: :render_unauthorized_request
-    rescue_from ExceptionHandler::MissingToken,        with: :render_unprocessable_entity
-    rescue_from ExceptionHandler::InvalidToken,        with: :render_unprocessable_entity
-    rescue_from ExceptionHandler::ExpiredSignature,    with: :render_unauthorized_request
-    rescue_from ExceptionHandler::DecodeError,         with: :render_unauthorized_request
-    rescue_from ExceptionHandler::BadRequest,          with: :render_bad_request
+    rescue_from RailsParam::Param::InvalidParameterError, with: :render_bad_request
+    rescue_from ActiveRecord::RecordInvalid,              with: :render_unprocessable_entity
+    rescue_from ActiveRecord::RecordNotFound,             with: :render_not_found
+    rescue_from ExceptionHandler::AuthenticationError,    with: :render_unauthorized_request
+    rescue_from ExceptionHandler::MissingToken,           with: :render_unprocessable_entity
+    rescue_from ExceptionHandler::InvalidToken,           with: :render_unprocessable_entity
+    rescue_from ExceptionHandler::ExpiredSignature,       with: :render_unauthorized_request
+    rescue_from ExceptionHandler::DecodeError,            with: :render_unauthorized_request
+    rescue_from ExceptionHandler::BadRequest,             with: :render_bad_request
+    rescue_from ExceptionHandler::AuthorizationError,     with: :render_403
   end
 
   private
@@ -37,5 +40,9 @@ module ExceptionHandler
 
   def render_not_found(e)
     render json: { message: e.message }, status: :unprocessable_entity
+  end
+
+  def render_403(e)
+    render json: { message: e.message }, status: 403
   end
 end

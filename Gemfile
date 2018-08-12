@@ -38,14 +38,9 @@ group :development do
   gem 'spring-watcher-listen', '~> 2.0.0'
 end
 
-# Used for bulk insertions
-gem 'activerecord-import', '~> 0.15.0'
-
-# Used to easily generate fake data
-gem 'faker', '~> 1.6', '>= 1.6.3'
-
-# A pure ruby implementation of the RFC 7519 OAuth JSON Web Token (JWT) standard.
-gem 'jwt', '~> 2.1'
-
-# Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+gem 'activerecord-import', '~> 0.15.0' # Used for bulk insertions
+gem 'faker', '~> 1.6', '>= 1.6.3' # Used to easily generate fake data
+gem 'jwt', '~> 2.1' # A pure ruby implementation of the RFC 7519 OAuth JSON Web Token (JWT) standard.
+gem 'rails_param', '~> 0.10.0' # Parameter Validation and Type Coercion for Rails
+gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby] # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
+gem 'whenever', '~> 0.9.4' # Clean ruby syntax for writing and deploying cron jobs.

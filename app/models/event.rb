@@ -4,6 +4,16 @@ class Event < ApplicationRecord
     weekly: 'weekly'
   }.freeze
 
+  DAY_OF_WEEK =  {
+    '0': 'sunday',
+    '1': 'monday',
+    '2': 'tuesday',
+    '3': 'wednesday',
+    '4': 'trursday',
+    '5': 'friday',
+    '6': 'saturday'
+  }.stringify_keys.freeze
+
   belongs_to :doctor
   has_many :availabilities
 
@@ -15,38 +25,28 @@ class Event < ApplicationRecord
                         :is_recurring,
                         :recurrence_step
   validate :valid_start_date
+  validate :valid_day_of_week
 
   after_create :populate_availability
 
   def populate_availability
-    slots = Slot.where("start_time >= ? and end_time <= ?", self.start_time.strftime("%H:%M:%S"), self.end_time.strftime("%H:%M:%S"))
-    is_available = self.is_available
-
-    if recurrence_type == 'daily'
-      availability = []
-      interval = (1 + recurrence_step.to_i).days
-      start_date = self.start_date
-      end_date = if self.end_date.present?
-                   [self.end_date, self.start_date + 7.days].min
-                 else
-                   start_date + 7.days
-                 end
-
-      while start_date < end_date
-        slots.each do |slot|
-          availability << self.availabilities.new(date: start_date, slot: slot, is_available: is_available)
-        end
-        start_date += interval
-      end
-
-      Availability.import!(availability, validate: true, on_duplicate_key_ignore: true)
+    if (self.start_time.to_date < Date.today + 15.days) && (end_time.nil? || end_date.to_date > Date.today)
+      PopulateAvailability.new(self).create_availabilities
     end
   end
 
   def valid_start_date
     return if end_date.nil?
-    if end_date < start_date
+    if end_date.to_date < start_date.to_date
       self.errors.add(:start_date, 'should be less than end date.')
+    elsif start_date.to_date < Date.today
+      self.errors.add(:start_date, 'should be a current or future date.')
+    elsif end_date.to_date < Date.today
+      self.errors.add(:end_date, 'should be a future date.')
     end
+  end
+
+  def valid_day_of_week
+    self.errors.add(:day_of_week, 'should be present when recurrence type is weekly.') if self.recurrence_type == 'weekly' and self.day_of_week.nil?
   end
 end

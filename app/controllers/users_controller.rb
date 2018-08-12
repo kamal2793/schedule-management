@@ -24,4 +24,10 @@ class UsersController < ApplicationController
     command = AuthenticateUser.new(email, password).encoded_token
     render json: { access_token: command, message: 'Login Successful' }
   end
+
+  def valid_login?
+  end
+
+  def valid_register?
+  end
 end

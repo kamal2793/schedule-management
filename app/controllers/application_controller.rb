@@ -3,6 +3,7 @@ class ApplicationController < ActionController::API
   attr_reader :current_user
 
   include ExceptionHandler
+  include ActionValidator
 
   private
   def authenticate_request

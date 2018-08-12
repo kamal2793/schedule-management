@@ -15,11 +15,11 @@ class Appointment < ApplicationRecord
   validate :slot_timing
 
   def valid_appointment_date
-    errors.add(:appointment_date, 'should be a current or future date.') if self.appointment_date < Date.today
-    errors.add(:appointment_date, 'should be be in next 7 days.') if self.appointment_date > (Date.today + 6.days)
+    errors.add(:appointment_date, 'should be a current or future date.') if self.appointment_date.to_date < Date.today
+    errors.add(:appointment_date, 'should be be in next 15 days.') if self.appointment_date.to_date > (Date.today + 15.days)
   end
 
   def slot_timing
-    self.errors.add(:base, 'Slot time is passed.') if self.slot.start_time.strftime('%H:%M') < Time.now.strftime('%H:%M')
+    self.errors.add(:base, 'Slot time is passed.') if self.slot.start_time.strftime('%H:%M') < Time.zone.now.strftime('%H:%M')
   end
 end
