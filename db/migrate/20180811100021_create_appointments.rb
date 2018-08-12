@@ -4,8 +4,8 @@ class CreateAppointments < ActiveRecord::Migration[5.1]
       t.references :doctor
       t.references :patient
       t.references :slot
-      t.datetime :appointment_date
-      t.text :status
+      t.datetime :appointment_date, null: false
+      t.text :status, null: false
 
       t.timestamps
     end

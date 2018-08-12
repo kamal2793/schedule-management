@@ -7,7 +7,13 @@ class Event < ApplicationRecord
   belongs_to :doctor
   has_many :availabilities
 
-  validates_presence_of :start_date, :start_time, :end_time, :recurrence_type
+  validates_presence_of :start_date,
+                        :start_time,
+                        :end_time,
+                        :recurrence_type,
+                        :is_available,
+                        :is_recurring,
+                        :recurrence_step
   validate :valid_start_date
 
   after_create :populate_availability
@@ -40,7 +46,7 @@ class Event < ApplicationRecord
   def valid_start_date
     return if end_date.nil?
     if end_date < start_date
-      self.errors.add(:start_date, 'Should be less than end date')
+      self.errors.add(:start_date, 'should be less than end date.')
     end
   end
 end

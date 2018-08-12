@@ -5,6 +5,6 @@ class User < ApplicationRecord
   has_one :doctor
   has_one :patient
 
-  validates_presence_of :first_name, :last_name, :email, :password_digest
+  validates_presence_of :first_name, :email, :password_digest
   validates_uniqueness_of :email
 end

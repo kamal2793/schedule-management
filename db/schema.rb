@@ -19,8 +19,8 @@ ActiveRecord::Schema.define(version: 20180811113213) do
     t.bigint "doctor_id"
     t.bigint "patient_id"
     t.bigint "slot_id"
-    t.datetime "appointment_date"
-    t.text "status"
+    t.datetime "appointment_date", null: false
+    t.text "status", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["doctor_id"], name: "index_appointments_on_doctor_id"
@@ -29,10 +29,10 @@ ActiveRecord::Schema.define(version: 20180811113213) do
   end
 
   create_table "availabilities", force: :cascade do |t|
-    t.datetime "date"
+    t.datetime "date", null: false
     t.bigint "event_id"
     t.bigint "slot_id"
-    t.boolean "is_available"
+    t.boolean "is_available", default: true, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["event_id"], name: "index_availabilities_on_event_id"
@@ -53,13 +53,15 @@ ActiveRecord::Schema.define(version: 20180811113213) do
     t.time "end_time", null: false
     t.date "start_date", null: false
     t.date "end_date"
-    t.boolean "is_available", default: true
-    t.boolean "is_recurring", default: false
+    t.boolean "is_available", default: true, null: false
+    t.boolean "is_recurring", default: true, null: false
     t.text "recurrence_type", null: false
-    t.integer "recurrence_step"
+    t.integer "recurrence_step", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["doctor_id"], name: "index_events_on_doctor_id"
+    t.index ["start_date", "end_date"], name: "index_events_on_start_date_and_end_date"
+    t.index ["start_time", "end_time"], name: "index_events_on_start_time_and_end_time"
   end
 
   create_table "patients", force: :cascade do |t|
@@ -78,13 +80,14 @@ ActiveRecord::Schema.define(version: 20180811113213) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.string "first_name"
+    t.string "first_name", null: false
     t.string "last_name"
-    t.string "email"
+    t.string "email", null: false
     t.string "contact_number"
     t.string "password_digest"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_users_on_email", unique: true
   end
 
 end
