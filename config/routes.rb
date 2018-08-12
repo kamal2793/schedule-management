@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   post 'register', to: 'users#register'
   post 'login',    to: 'users#login'
 
-  resources :events, only: %i[index create]
-  resources :appointments, only: %i[index create]
-
+  resources :events,         only: %i[index create update]
+  resources :appointments,   only: %i[index create]
+  resources :availabilities, only: %i[index]
 end

@@ -19,7 +19,7 @@ ActiveRecord::Schema.define(version: 20180811113213) do
     t.bigint "doctor_id"
     t.bigint "patient_id"
     t.bigint "slot_id"
-    t.datetime "appointment_date", null: false
+    t.date "appointment_date", null: false
     t.text "status", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -29,12 +29,14 @@ ActiveRecord::Schema.define(version: 20180811113213) do
   end
 
   create_table "availabilities", force: :cascade do |t|
-    t.datetime "date", null: false
+    t.date "date", null: false
     t.bigint "event_id"
+    t.bigint "doctor_id"
     t.bigint "slot_id"
     t.boolean "is_available", default: true, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["doctor_id"], name: "index_availabilities_on_doctor_id"
     t.index ["event_id"], name: "index_availabilities_on_event_id"
     t.index ["slot_id"], name: "index_availabilities_on_slot_id"
   end

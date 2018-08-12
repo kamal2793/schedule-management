@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+  skip_before_action :valid_action?, only: %i[login register]
   skip_before_action :authenticate_request, only: %i[login register]
 
   def register
@@ -26,8 +27,13 @@ class UsersController < ApplicationController
   end
 
   def valid_login?
+    param! :email, String, required: true, blank: false
+    param! :password, String, required: true, blank: false
   end
 
   def valid_register?
+    param! :first_name, String, required: true, blank: false
+    param! :email, String, required: true, blank: false
+    param! :password, String, required: true, blank: false
   end
 end

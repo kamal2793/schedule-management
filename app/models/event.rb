@@ -21,9 +21,9 @@ class Event < ApplicationRecord
                         :start_time,
                         :end_time,
                         :recurrence_type,
-                        :is_available,
-                        :is_recurring,
                         :recurrence_step
+  validates_inclusion_of :is_available, :is_recurring, in: [true, false]
+
   validate :valid_start_date
   validate :valid_day_of_week
 
@@ -31,7 +31,7 @@ class Event < ApplicationRecord
 
   def populate_availability
     if (self.start_time.to_date < Date.today + 15.days) && (end_time.nil? || end_date.to_date > Date.today)
-      PopulateAvailability.new(self).create_availabilities
+      EventManager.new(self).create_availabilities
     end
   end
 
